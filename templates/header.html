@@ -1,0 +1,42 @@
+{% load static %}
+{% block custom_head %}{% endblock %}
+<main>
+    <header class="p-3 mb-3 border-bottom">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="{% url 'event-list' %}" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+                    <svg class="bi me-0" width="40" height="32" role="img" aria-label="Bootstrap">
+                        <use xlink:href="#bootstrap"/>
+                    </svg>
+                </a>
+
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="{% url "event-list" %}" class="nav-link px-2 link-secondary">All Events</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'event-attended' %}" class="nav-link px-2 link-secondary">Attended</a></li>
+                        <li><a href="{% url 'my-event-list' %}" class="nav-link px-2 link-secondary">My Events</a></li>
+                        <li><a href="{% url 'event-create' %}" class="nav-link px-2 link-secondary">Create Event</a></li>
+                    {% endif %}
+                </ul>
+                {% if user.is_authenticated %}
+                    <div class="dropdown text-end">
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{% static 'images/profile.png' %}" alt="mdo" width="32" height="32"
+                                 class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style=""><li>
+                            <li><a class="dropdown-item" href="{% url 'account_logout' %}">Sign out</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="text-end">
+                        <a href="{% url 'account_login' %}" class="btn btn-error">Login</a>
+                        <a href="{% url 'account_signup' %}" class="btn btn-warning">Sign-up</a>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </header>
+</main>

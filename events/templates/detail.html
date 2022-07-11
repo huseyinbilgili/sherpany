@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load event_tags %}
+{% load static %}
+{% block custom_head %}
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="col-md-12">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>Owner</td>
+                    <td>{{ object.owner }}</td>
+                </tr>
+                <tr>
+                    <td>Title</td>
+                    <td>{{ object.title }}</td>
+                </tr>
+                <tr>
+                    <td>Description</td>
+                    <td>{{ object.description }}</td>
+                </tr>
+                <tr>
+                    <td>Date</td>
+                    <td>{{ object.date }}</td>
+                </tr>
+                <tr>
+                    <td>Actions</td>
+                    <td>
+                        {% if is_attended %}
+                            <a class="btn btn-danger" href="{% url 'event-attend-delete' object.id %}"><i class="fa-solid fa-xmark"></i>Discard</a>
+                        {% else %}
+                            <a class="btn btn-primary" href="{% url 'event-attend' object.pk %}"><i class="fa-solid fa-check"></i>Join</a>
+                        {% endif %}
+                        {% if object.owner == request.user %}
+                            <a class="btn btn-warning" href="{% url 'event-update' object.pk %}"><i class="fa-solid fa-edit"></i>Edit</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3">
+            <h2>Attendees</h2>
+            <table class="table">
+                <tbody>
+                {% for attendance in object.attendees.all %}
+                <tr>
+                    <td>{{ attendance.user.email|split:"@" }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

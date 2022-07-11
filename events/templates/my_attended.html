@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load event_tags %}
+{% load static %}
+{% block custom_head %}
+{% endblock %}
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            {% if object_list %}
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Owner</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Total Participant</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for attendance in object_list %}
+                        <tr>
+                            <td>{{ attendance.event.owner.email|split:"@" }}</td>
+                            <td>{{ attendance.event.title }}</td>
+                            <td>{{ attendance.event.date }}</td>
+                            <td>{{ attendance.event.attendees.count }}</td>
+                            <td>
+                                <a href="{% url 'event-detail' attendance.event.id %}" class="btn btn-danger"><i class="fa-solid fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="{% url 'event-list' %}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                        {% endif %}
+
+                        {% for i in page_obj.paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <li class="page-item active"><a class="page-link"
+                                                                href="{% url 'event-list' %}?page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="{% url 'event-list' %}?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{% url 'event-list' %}?page={{ page_obj.next_page_number }}">Next</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% else %}
+                <div class="col-12">There are no event to be listed.</div>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
