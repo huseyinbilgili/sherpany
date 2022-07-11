@@ -1,33 +1,24 @@
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.urls import reverse, reverse_lazy
-from django.views.generic import (
-    CreateView,
-    DetailView,
-    ListView,
-    RedirectView,
-    UpdateView,
-)
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, ListView, RedirectView, UpdateView
 
 from events.forms import EventCreateForm, EventUpdateForm
 from events.models import Attendance, Event
 
 
 class EventListView(ListView):
-    """
-    List all events.
-    """
+    """List all events."""
 
     queryset = Event.objects.detailed().order_by("-date")
-    paginate_by = 3
+    paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "list.html"
 
 
 class EventCreateView(LoginRequiredMixin, CreateView):
-    """
-    Create an event.
-    """
+    """Create an event."""
 
     model = Event
     form_class = EventCreateForm
@@ -40,9 +31,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 
 class EventDetailView(DetailView):
-    """
-    Display event details.
-    """
+    """Display event details."""
 
     model = Event
     template_name = "detail.html"
@@ -50,16 +39,12 @@ class EventDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
-            context["is_attended"] = self.object.attendees.filter(
-                user=self.request.user
-            ).exists()
+            context["is_attended"] = self.object.attendees.filter(user=self.request.user).exists()
         return context
 
 
 class EventUpdateView(LoginRequiredMixin, UpdateView):
-    """
-    Update event
-    """
+    """Update event"""
 
     model = Event
     template_name = "update.html"
@@ -76,12 +61,10 @@ class EventUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class MyEventListView(LoginRequiredMixin, ListView):
-    """
-    Logged in user's events are listing.
-    """
+    """Logged in user's events are listing."""
 
     queryset = Event.objects.detailed().order_by("-date")
-    paginate_by = 3
+    paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "list.html"
 
     def get_queryset(self):
@@ -90,12 +73,10 @@ class MyEventListView(LoginRequiredMixin, ListView):
 
 
 class AttendanceView(LoginRequiredMixin, ListView):
-    """
-    Logged in user's attended events are listing.
-    """
+    """Logged in user's attended events are listing."""
 
-    queryset = Attendance.objects.detailed()
-    paginate_by = 3
+    queryset = Attendance.objects.detailed().order_by("pk")
+    paginate_by = settings.DEFAULT_PAGE_SIZE
     template_name = "my_attended.html"
 
     def get_queryset(self):
@@ -104,25 +85,19 @@ class AttendanceView(LoginRequiredMixin, ListView):
 
 
 class AttendanceCreateView(LoginRequiredMixin, RedirectView):
-    """
-    Attend an event.
-    """
+    """Attend an event."""
 
     url = reverse_lazy("event-list")
 
     def get_redirect_url(self, *args, **kwargs):
         event = get_object_or_404(Event, pk=kwargs.get("pk"))
-        attendance, _ = Attendance.objects.get_or_create(
-            user=self.request.user, event=event
-        )
+        attendance, _ = Attendance.objects.get_or_create(user=self.request.user, event=event)
 
         return super().get_redirect_url(*args, **kwargs)
 
 
 class AttendanceDeleteView(LoginRequiredMixin, RedirectView):
-    """
-    Might be soft delete.
-    """
+    """Might be soft delete."""
 
     url = reverse_lazy("event-list")
 

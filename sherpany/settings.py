@@ -20,9 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "django-insecure-g!#r=i@p4xk#0ss5)$o(dq6*yh)o3k&md&sx5%^=#n$k4wit^k"
-)
+SECRET_KEY = "django-insecure-g!#r=i@p4xk#0ss5)$o(dq6*yh)o3k&md&sx5%^=#n$k4wit^k"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -65,7 +63,12 @@ ROOT_URLCONF = "sherpany.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "DIRS": [
+            os.path.join(
+                BASE_DIR,
+                "templates",
+            )
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -159,3 +162,5 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 LOGIN_REDIRECT_URL = "event-list"
 ACCOUNT_LOGOUT_REDIRECT_URL = "event-list"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_PAGE_SIZE = 12

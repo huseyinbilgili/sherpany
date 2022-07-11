@@ -6,9 +6,7 @@ from events.managers import AttendanceQuerySet, EventQuerySet
 
 
 class Event(models.Model):
-    owner = models.ForeignKey(
-        to=User, verbose_name=_("Owner"), on_delete=models.CASCADE
-    )
+    owner = models.ForeignKey(to=User, verbose_name=_("Owner"), on_delete=models.CASCADE)
     title = models.TextField(verbose_name=_("Title"))
     description = models.TextField(_("Description"))
     date = models.DateField(verbose_name=_("Date"))
@@ -20,7 +18,7 @@ class Event(models.Model):
         verbose_name_plural = _("Events")
 
     def __str__(self):
-        return f"Title : {self.title} - Date : {self.date}"
+        return f"Title: {self.title} - Date: {self.date}"
 
 
 class Attendance(models.Model):
@@ -30,9 +28,7 @@ class Attendance(models.Model):
         on_delete=models.CASCADE,
         related_name="attendees",
     )
-    user = models.ForeignKey(
-        to=User, verbose_name=_("User"), on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(to=User, verbose_name=_("User"), on_delete=models.CASCADE)
 
     objects = AttendanceQuerySet.as_manager()
 
@@ -41,4 +37,4 @@ class Attendance(models.Model):
         verbose_name_plural = _("Attendees")
 
     def __str__(self):
-        return f"{self.event} - {self.user.email}"
+        return f"Event: {self.event.title} - User: {self.user.email}"

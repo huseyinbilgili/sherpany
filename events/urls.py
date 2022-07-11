@@ -18,11 +18,9 @@ urlpatterns = [
     path("detail/<int:pk>", EventDetailView.as_view(), name="event-detail"),
     path("update/<int:pk>", EventUpdateView.as_view(), name="event-update"),
     path("attended/", AttendanceView.as_view(), name="event-attended"),
+    path("attend/<int:pk>", AttendanceCreateView.as_view(), name="event-attend"),
     path(
-        "attend/<int:pk>", AttendanceCreateView.as_view(), name="event-attend"
-    ),
-    path(
-        "attend-delete//<int:pk>",
+        "attend-delete/<int:pk>",
         AttendanceDeleteView.as_view(),
         name="event-attend-delete",
     ),
