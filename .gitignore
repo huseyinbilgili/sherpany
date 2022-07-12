@@ -100,3 +100,4 @@ generated*
 
 # Prevent committing editable requirements in src directory
 src/
+db.sqlite3
